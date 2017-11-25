@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# Web2py custom Paginator like Google using Bootstrap
+
 import math
 from gluon import *
 
