@@ -20,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# Web2py custom Paginator like Google using Bootstrap
-
 import math
 from gluon import *
 
@@ -32,9 +30,10 @@ def _getACFfromURL(url):
     a,b,c,d = url.split('/')
     return b,c,d
 
-def pagintation(total,entriesPerPage,currentPage,requestURL):
+def pagintation(total,entriesPerPage,currentPage,requestURL,params):
     numberPages = int(math.ceil(total/float(entriesPerPage)))
     a,c,f = _getACFfromURL(requestURL)
+    argDict = dict(params)
     htmlResult = '<ul class="pagination">'
     if numberPages <= 10:
         startIndex = 1
@@ -50,14 +49,17 @@ def pagintation(total,entriesPerPage,currentPage,requestURL):
             startIndex = currentPage - 5
             endIndex = currentPage + 5
     if currentPage != 1:
-        htmlResult = htmlResult + '<li><a href="' + URL(a=a,c=c,f=f,vars=dict(page=currentPage-1)) + '">Prev</a></li>'
+        argDict['page']=currentPage-1
+        htmlResult = htmlResult + '<li><a href="' + URL(a=a,c=c,f=f,vars=argDict) + '">Prev</a></li>'
     for p in range(startIndex,endIndex):
+        argDict['page']=p
         if currentPage == p:
-            htmlResult = htmlResult + '<li class="active"><a href="' + URL(a=a,c=c,f=f,vars=dict(page=p)) + '">{0}</a></li>'.format(p)
+            htmlResult = htmlResult + '<li class="active"><a href="' + URL(a=a,c=c,f=f,vars=argDict) + '">{0}</a></li>'.format(p)
         else:
-            htmlResult = htmlResult + '<li><a href="' + URL(a=a,c=c,f=f,vars=dict(page=p)) + '">{0}</a></li>'.format(p)
+            htmlResult = htmlResult + '<li><a href="' + URL(a=a,c=c,f=f,vars=argDict) + '">{0}</a></li>'.format(p)
     if currentPage != numberPages:
-        htmlResult = htmlResult + '<li><a href="' + URL(a=a,c=c,f=f,vars=dict(page=currentPage+1)) + '">Next</a></li>'
+        argDict['page']=currentPage+1
+        htmlResult = htmlResult + '<li><a href="' + URL(a=a,c=c,f=f,vars=argDict) + '">Next</a></li>'
     htmlResult += '</ul>'
     return htmlResult
 
@@ -74,7 +76,7 @@ def pagintation(total,entriesPerPage,currentPage,requestURL):
 #     totalRecords = db(db.products.id > 0).count()
 #     query = (db.products.id > 0)
 #     products = db(query).select(orderby=~db.products.id,limitby=(start,end))
-#     pagintator = Paginator.pagintation(totalRecords,entriesPerPage,page,request.url)
+#     pagintator = Paginator.pagintation(totalRecords,entriesPerPage,page,request.url,request.vars)
 #     return dict(products=products,pagintator=pagintator)
 
 ########## Views ##########
